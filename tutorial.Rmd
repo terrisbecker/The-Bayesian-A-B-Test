@@ -1,14 +1,5 @@
 ---
 title: "The Bayesian A/B Test"
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
-author: "Terris Becker"
-date: "12/26/2019"
-output: html_document
-indent: true
 ---
 # Introduction
 The A/B test is a well known and frequently implemented form of experimental design. A/B testing is really a special case of statistical hypothesis testing but because of its rise in popularity among businesses in the technology sector, the A/B test has emerged as a standalone subject of study in many statistics and data science practices. The classic A/B test example, and the one I'll refer to for this tutorial, is set up as follows: "An e-commerce website is trying to increase the rate at which users click the 'Add to Cart' button on one of their frequently visited webpages. The company believes that one way they can acheive this by changing the color of the button from blue to purple. In the following week, visitors of the webpage are randomly given one of the two color variations and the rates at which customers click the 'Add to Cart' button are recorded." 
