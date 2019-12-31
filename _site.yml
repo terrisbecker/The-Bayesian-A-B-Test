@@ -1,12 +1,12 @@
-name: "cars"
+name: "Bayesian A/B Test"
 output_dir: "docs"
 navbar:
-  title: "Cars"
+  title: "The Bayesian A/B Test"
   left:
   - text: "Home"
     href: index.html
-  - text: "Speed and Distance"
-    href: speed-and-distance.html
+  - text: "Tutorial"
+    href: tutorial.html
 output:
   html_document:
 theme: cosmo
