@@ -1,4 +1,0 @@
----
-title: "Home"
-output: html_document
----
