@@ -14,3 +14,9 @@ This is the data set that we will be analyzed. The data is simulated, but it is 
 | 6 2020-01-07 |  4265  |  4316  | 36361  | 36133  | 0.1172960  | 0.1194476 |
 
 Note that the columns ATotal and BTotal are running totals. That is, the value in the cell is a total count up to that point in time.
+
+## ABmodel.stan
+This is a file written in the STAN programming language. This is really the defining feature of the tutorial. STAN allows users to code probability models and fit the models to data
+
+## ABAnalysis.R
+A summary of all of the code used in the tutorial. All in one file for convenience
