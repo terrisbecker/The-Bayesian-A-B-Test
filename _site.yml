@@ -5,6 +5,8 @@ navbar:
   left:
   - text: "Home"
     href: index.html
+  - text: "GitHub Repository"
+    href: https://github.com/terrisbecker/The-Bayesian-A-B-Test
   - text: "Tutorial"
     href: tutorial.html
 output:
