@@ -388,11 +388,11 @@ end.fit &lt;- sampling(ABmodel,
 ## post-warmup draws per chain=8000, total post-warmup draws=32000.
 ## 
 ##              mean se_mean   sd     2.5%      25%      50%      75%    97.5% n_eff Rhat
-## theta[1]     0.12    0.00 0.01     0.11     0.12     0.12     0.12     0.13 27600    1
-## theta[2]     0.13    0.00 0.01     0.11     0.12     0.13     0.13     0.14 27009    1
-## lp__     -2157.95    0.01 1.01 -2160.66 -2158.34 -2157.63 -2157.22 -2156.96 13292    1
+## theta[1]     0.12    0.00 0.01     0.11     0.12     0.12     0.12     0.13 25876    1
+## theta[2]     0.13    0.00 0.01     0.11     0.12     0.13     0.13     0.14 27164    1
+## lp__     -2157.94    0.01 1.00 -2160.65 -2158.32 -2157.63 -2157.23 -2156.97 15280    1
 ## 
-## Samples were drawn using NUTS(diag_e) at Wed Jan 01 13:18:20 2020.
+## Samples were drawn using NUTS(diag_e) at Wed Jan 01 13:26:26 2020.
 ## For each parameter, n_eff is a crude measure of effective sample size,
 ## and Rhat is the potential scale reduction factor on split chains (at 
 ## convergence, Rhat=1).</code></pre>
@@ -405,7 +405,7 @@ end.fit &lt;- sampling(ABmodel,
 <pre class="r"><code>posterior.mat &lt;- as.matrix(end.fit)
 # Find the percent of click rates that are larger in the control group
 sum(posterior.mat[,1]&gt;posterior.mat[,2])/nrow(posterior.mat)</code></pre>
-<pre><code>## [1] 0.1066875</code></pre>
+<pre><code>## [1] 0.1040625</code></pre>
 <p>We see that if we choose to switch from design A to design B, there is about an 11% chance that we are wrong. This might be too high of a risk for many people to consider switching, but it’s not the end of the story. The problem with quantifying the switching risk in this manner is that it treats all differences in the group click rates as equal. For example, suppose that in reality <span class="math inline">\(\theta_A-\theta_B = 0.0001\)</span> (i.e. there’s a very small difference in favor of variation A). If we choose to adopt variation B based on the previous analysis, the mistake we make is not really a problem. On the other hand, suppose that <span class="math inline">\(\theta_A-\theta_B = 0.1\)</span>. Choosing to switch to variation B is a far more severe mistake in this case, because group A was significantly more favorable in reality. A class of functions called <em>loss functions</em> are used to assign penalties to increasing larger errors. If you’ve ever fit a regression model to data using least squares, you’ve fit a line of best fit by minimizing a quadratic loss function. The loss function I’ll use comes from Stucchio (2015). The loss function for staying with variation A is <span class="math display">\[L(\theta_A, \theta_B, A) = \max(\theta_B-\theta_A, 0).\]</span> Similarly, if we choose variation B, the loss function is <span class="math display">\[L(\theta_A, \theta_B, B) = \max(\theta_A-\theta_B, 0).\]</span> Along with having some nice properties (I’ll include Stucchio’s paper in the repository), this loss function has the advantage that the output values are on the same scale as the click probabilities. That is, the loss function tells us the percentage of users that we would lose <em>given that we made the wrong decision.</em> We can code this loss function into R and then apply it to the matrix of posterior observations we defined above</p>
 <pre class="r"><code>lossA &lt;- function(theta.vec){
   if (theta.vec[2]-theta.vec[1] &gt; 0) return(theta.vec[2]-theta.vec[1])
@@ -421,9 +421,9 @@ loss.dist.A &lt;- apply(posterior.mat[,1:2], 1, lossA)</code></pre>
 <p><img src="tutorial_files/figure-html/unnamed-chunk-10-1.png" width="50%" /><img src="tutorial_files/figure-html/unnamed-chunk-10-2.png" width="50%" /><img src="tutorial_files/figure-html/unnamed-chunk-10-3.png" width="50%" /></p>
 <p>We can also calculate the expected loss for each variation.</p>
 <pre class="r"><code>mean(loss.dist.A)</code></pre>
-<pre><code>## [1] 0.001544161</code></pre>
+<pre><code>## [1] 0.001541645</code></pre>
 <pre class="r"><code>mean(loss.dist.B)</code></pre>
-<pre><code>## [1] 6.105021e-05</code></pre>
+<pre><code>## [1] 6.043706e-05</code></pre>
 <p>Variation B is the clear winner here. Even though there’s an 11% chance that we’re making a mistake by switching to group B, the expected loss is so small that making such a mistake isn’t really an issue. Another great advantage of this technique is that we can set an expected loss threshold before we conduct the A/B test. The test is then run until one of the two groups falls below the threshold. This ensures that we collect enough data to make an accurate and informed decision, but also ensures that we don’t waste time and resources. Finally, we’ll conclude that the e-commerce website is better off if they change the color of the “Add to Cart” button.</p>
 </div>
 <div id="conclusion" class="section level1">
